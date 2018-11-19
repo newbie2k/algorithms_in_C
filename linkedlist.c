@@ -124,8 +124,8 @@ void delete_node(int pos) {
         }
 }
 
-
 /* Linked List Print Nodes */
+
 void print_node() {
 	int i=1;
 	current = start;
