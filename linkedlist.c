@@ -1,3 +1,8 @@
+/*****************************************************************************
+		
+				Singly Linked List
+
+*******************************************************************************/
 #include<stdio.h>
 #include<stdlib.h>
 
@@ -49,7 +54,7 @@ int main() {
 /* Add node to Linked List */
 
 void add_node(int val, int pos) {
-	int flag=0,i;
+	int i;
 	struct node *new;
 	current = start;					//One every call setting current to start
 
@@ -66,54 +71,60 @@ void add_node(int val, int pos) {
 		new->next = current;
 		new->data = val;
 	}
-	else {							//Here we will assume current is just before new
+	else {	
+		/* NOTE: i=2 because we want to reach one element before desired 
+		 element(therefore we should take i = 1 insted of 0) and we
+		 also know that 1st itration reachs to 2node,2nd itration to
+		 3rd node and so on(Hence i = 2 insted of 1) ... */							
 		for(i=2;i<pos;i++) {
 			current = current->next;
 			if(current == NULL) {			//if previous node(just) is null then how we can put element after that
 				printf("Error: Position is out of bound\n");
 				free(new);
-				flag = 1;
-				break;
+				return;
 			}
 		}
-		if(flag == 0) {
-			new->next = current->next;
-			current->next = new;
-			new->data = val;
-		}
+		new->next = current->next;
+		current->next = new;
+		new->data = val;
 	}
 }
-
-
 
 /* Delete node from Linked List */
+
 void delete_node(int pos) {
-	int flag = 0,i;
+	int i;
 	struct node *del;
 	current = start;
-
-	for(i=1;i<=pos-1;i++) {
-		/* Checking if reached Last Element */
-			if((current->next == NULL) && (i != pos - 1)) {		//Need to Check Logic
-				printf("Error: Given Position out of last element");
-				flag = 1;
-				break;
-			}
-			current = current->next;
-	}
 	
-	if(flag != 1) {
-		if(pos == 1) {
-			start = current->next;
-			free(current);
-		}
-		else {
-			del = current->next;
-			current->next = del->next;
-			free(del);
-		}
-	}
+	if(start == NULL) {					//Empty List
+                printf("Error: Empty List\n");
+        }
+
+	else if(pos == 1) {                                          //Delete first node
+                start = current->next;
+		free(current);
+        }
+        else {                                                  //Here we will assume current is just before new
+                for(i=2;i<pos;i++) {
+                        current = current->next;
+                        if(current == NULL) {                   //Checking for NULL element before reaching Deletable to avoid seg. fault
+                                printf("Error: Position is out of bound\n");
+				return;
+                        }
+                }
+		if(current->next == NULL) {             //Checking Deletable Element Exist or not
+			printf("Error: Position is out of bound\n");
+                        return;
+                }
+		del = current->next;
+		current->next = del->next;
+		free(del);
+                
+        }
 }
+
+
 /* Linked List Print Nodes */
 void print_node() {
 	int i=1;
